@@ -59,18 +59,9 @@
     <body>
         <div class="container">
             WASM Factorial:
-            <input type="text" id="timeInput" maxlength="10" placeholder="Enter text" />
+            <input type="text" id="timeInput" maxlength="5" placeholder="Enter text" />
             <button id="submitButton">Submit</button>
             <div class="output" id="outputDiv">output will appear here...</div>
-            <div class="output">total time <span id="totalTime">...</span> ms</div>
-        </div>
-
-        <div class="container">
-            JavaScript Factorial:
-            <input type="text" id="timeInput-2" maxlength="10" placeholder="Enter text" />
-            <button id="submitButton-2">Submit</button>
-            <div class="output" id="outputDiv-2">output will appear here...</div>
-            <div class="output">total time <span id="totalTime-2">...</span> ms</div>
         </div>
     </body>
 
@@ -90,29 +81,6 @@
             let s = calcFactorial(parseInt(input));
             let end = performance.now();
             document.getElementById('outputDiv').innerText = s;
-            document.getElementById('totalTime').innerText = end - start;
         });
-
-        let buttonElement2 = document.getElementById('submitButton-2');
-        document.getElementById('submitButton-2').addEventListener('click', () => {
-            let input = document.getElementById('timeInput-2').value;
-            let start = performance.now();
-            let s = factorial(parseInt(input));
-            let end = performance.now();
-            document.getElementById('outputDiv-2').innerText = s;
-            document.getElementById('totalTime-2').innerText = end - start;
-        });
-
-        function factorial(n) {
-            if (n === 0) {
-                return 1;
-            }
-
-            for (let i = n - 1; i > 0; i--) {
-                n *= i;
-            }
-
-            return n;
-        }
     </script>
 </html>
