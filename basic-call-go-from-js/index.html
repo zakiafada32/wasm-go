@@ -1,0 +1,118 @@
+<html>
+    <script src="wasm_exec.js"></script>
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Input Example</title>
+        <style>
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                font-family: Verdana, sans-serif;
+                background-color: #f4f4f4;
+            }
+
+            .container {
+                text-align: center;
+                padding: 20px;
+                background-color: #ffffff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+            }
+
+            input {
+                width: 200px;
+                padding: 10px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                margin-bottom: 10px;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 16px;
+                color: #fff;
+                background-color: #3498db;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            button:hover {
+                background-color: #2980b9;
+            }
+
+            .output {
+                margin-top: 20px;
+                font-size: 16px;
+                color: #8f2d2d;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            WASM Factorial:
+            <input type="text" id="timeInput" maxlength="10" placeholder="Enter text" />
+            <button id="submitButton">Submit</button>
+            <div class="output" id="outputDiv">output will appear here...</div>
+            <div class="output">total time <span id="totalTime">...</span> ms</div>
+        </div>
+
+        <div class="container">
+            JavaScript Factorial:
+            <input type="text" id="timeInput-2" maxlength="10" placeholder="Enter text" />
+            <button id="submitButton-2">Submit</button>
+            <div class="output" id="outputDiv-2">output will appear here...</div>
+            <div class="output">total time <span id="totalTime-2">...</span> ms</div>
+        </div>
+    </body>
+
+    <script>
+        // Instantiate a new Go object (defined in from wasm_exec.js)
+        const go = new Go();
+        WebAssembly.instantiateStreaming(fetch('http://localhost:8000/factorial.wasm'), go.importObject).then(
+            (result) => {
+                go.run(result.instance);
+            }
+        );
+
+        let buttonElement = document.getElementById('submitButton');
+        document.getElementById('submitButton').addEventListener('click', () => {
+            let input = document.getElementById('timeInput').value;
+            let start = performance.now();
+            let s = calcFactorial(parseInt(input));
+            let end = performance.now();
+            document.getElementById('outputDiv').innerText = s;
+            document.getElementById('totalTime').innerText = end - start;
+        });
+
+        let buttonElement2 = document.getElementById('submitButton-2');
+        document.getElementById('submitButton-2').addEventListener('click', () => {
+            let input = document.getElementById('timeInput-2').value;
+            let start = performance.now();
+            let s = factorial(parseInt(input));
+            let end = performance.now();
+            document.getElementById('outputDiv-2').innerText = s;
+            document.getElementById('totalTime-2').innerText = end - start;
+        });
+
+        function factorial(n) {
+            if (n === 0) {
+                return 1;
+            }
+
+            for (let i = n - 1; i > 0; i--) {
+                n *= i;
+            }
+
+            return n;
+        }
+    </script>
+</html>
